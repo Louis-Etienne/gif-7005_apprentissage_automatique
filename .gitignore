@@ -1,0 +1,30 @@
+# Environnement virtuel Python
+.venv/
+
+# Cache Python
+__pycache__/
+*.pyc
+
+# Données locales
+data/
+
+# Modèles et poids volumineux
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Fichiers temporaires Jupyter
+.ipynb_checkpoints/
+
+# Fichiers macOS
+.DS_Store
+
+# Secrets et configuration privée
+.env
+.env.*
+
+# Métadonnées de construction et d'installation Python
+*.egg-info/
+build/
+dist/
