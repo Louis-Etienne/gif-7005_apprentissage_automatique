@@ -62,3 +62,14 @@ Projet réalisé par une équipe de quatre étudiants.
 
 Phase de familiarisation avec la littérature,
 les jeux de données et les modèles.
+
+## Installation du repo
+1. Installation des dépendances : 
+```
+uv sync
+```
+
+2. Installation des submodules :
+```
+git submodule update --init
+```

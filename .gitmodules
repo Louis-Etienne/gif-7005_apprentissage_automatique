@@ -1,0 +1,3 @@
+[submodule "submodules/Mammo-FM"]
+	path = submodules/Mammo-FM
+	url = https://github.com/batmanlab/Mammo-FM.git
