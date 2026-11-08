@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 import pandas as pd
 import torch
+import json
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -251,6 +252,31 @@ def evaluate_checkpoint(args):
         score_threshold=args.score_threshold,
         max_detections=args.max_detections,
     )
+
+    import json
+
+    # Save evaluation metrics
+    metrics = {
+        "dataset": args.dataset,
+        "architecture": args.arch,
+        "checkpoint": args.chk_pt_path,
+        "iou_threshold": args.iou_threshold,
+        "mean_ap": float(mean_ap),
+        "average_precisions": {
+            args.concepts[label]: {
+                "AP": float(ap),
+                "annotations": int(num_annotations)
+            }
+            for label, (ap, num_annotations) in average_precisions.items()
+        }
+    }
+
+    metrics_path = Path(args.visualization_dir) / "metrics.json"
+
+    with open(metrics_path, "w") as f:
+        json.dump(metrics, f, indent=4)
+
+    print(f"Metrics saved to: {metrics_path}")
 
     # 4. Results
     print("\n" + "=" * 60)
