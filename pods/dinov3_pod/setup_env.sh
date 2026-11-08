@@ -12,7 +12,7 @@ conda activate "$ENV_PATH"
 
 pip install --index-url "$TORCH_INDEX" torch==2.5.1 torchvision==0.20.1
 pip install numpy==1.26.4 pandas opencv-python-headless==4.10.0.84 imgaug==0.4.0 albumentations==2.0.0 \
-    tensorboard nltk transformers matplotlib pillow
+    tensorboard torchmetrics termcolor omegaconf ftfy regex scikit-learn submitit nltk transformers matplotlib pillow
 
 python -c "import torch, imgaug, albumentations; print('torch', torch.__version__, 'cuda', torch.cuda.is_available())"
 echo "Activate with: conda activate $ENV_PATH"

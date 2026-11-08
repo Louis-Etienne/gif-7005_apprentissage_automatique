@@ -16,8 +16,11 @@ Adam + grad-clip 0.1, checkpoint names and directory layout).
 DINOv3 -> C3/C4/C5 adapter (ViTDet-style "simple feature pyramid"):
   With patch 16 the 512x512 image is fed as is (32x32 tokens = stride 16).
   Three intermediate blocks (default 50%, 75%, 100% depth, final norm applied)
-  are resampled to the stride-8/16/32 grids (64/32/16) and projected with
+  are resampled to the stride-16/32/32 grids (32/16/16) and projected with
   1x1 conv + GN + GELU + 3x3 conv + GN to (256, 512, 1024) channels.
+  Strides are 16/32/32, not the usual 8/16/32: Mammo-FM's PyramidFeatures
+  upsamples C3 and C4 x2 before merging (matching its EfficientNet-B5 outputs),
+  so this is what yields P3/P4/P5 at the anchor strides 8/16/32.
 
 Weights: DINOv3 checkpoints are gated. Request access from Meta, then pass the
 emailed URL or a downloaded .pth with --dinov3-weights. They are saved to
@@ -158,7 +161,9 @@ def _url_filename(url):
 class DINOv3Backbone(nn.Module):
     """DINOv3 ViT/16 encoder + simple feature pyramid -> (C5, C3, C4, C5)."""
 
-    strides = (8, 16, 32)
+    # Mammo-FM's FPN upsamples C3 and C4 x2 before the top-down merge, so it expects
+    # C3/C4/C5 at strides 16/32/32 (as its EfficientNet returns) to get P3/P4/P5 at 8/16/32.
+    strides = (16, 32, 32)
 
     def __init__(self, arch="dinov3_vitb16", hub_repo="facebookresearch/dinov3", hub_source="github",
                  weights=None, pretrained=True, layers=None, out_channels=(256, 512, 1024),
