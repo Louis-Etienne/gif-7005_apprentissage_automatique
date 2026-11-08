@@ -173,9 +173,9 @@ def save_prediction_examples(
 
             scores, labels, boxes = model(input_tensor)
 
-            scores = scores[0].cpu().numpy()
-            labels = labels[0].cpu().numpy()
-            boxes = boxes[0].cpu().numpy()
+            scores = scores.detach().cpu().numpy()
+            labels = labels.detach().cpu().numpy()
+            boxes = boxes.detach().cpu().numpy()
 
             valid_indices = np.where(
                 scores > args.score_threshold
