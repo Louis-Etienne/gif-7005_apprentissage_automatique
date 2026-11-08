@@ -1,4 +1,7 @@
-python -u evaluate_detector.py \
+conda env config vars set \
+    PYTHONPATH=/workspace/Mammo-FM/src/codebase
+
+python -u /workspace/gif-7005_apprentissage_automatique/pods/mammo_fm_pod/evaluate_detector.py \
     --dataset ViNDr \
     --data-dir /workspace/data/vindr_png \
     --img-dir /workspace/data/vindr_png/images_png \

@@ -93,6 +93,9 @@ def get_validation_dataset(args):
     # This is not an additional evaluation resize.
     args.resize = 512
 
+    args.alpha = 50
+    args.sigma = 5
+    
     valid_loader, valid_dataset = get_dataset(
         args,
         train=False
