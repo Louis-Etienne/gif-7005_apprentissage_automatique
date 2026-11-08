@@ -180,8 +180,11 @@ class DINOv2Backbone(nn.Module):
         load_hub_weights = pretrained and not weights_path
         print(f"Loading {arch} from torch.hub ({hub_source}: {hub_repo}), "
               f"hub pretrained weights: {load_hub_weights}")
+        # skip_validation: torch.hub's fork check only accepts branch/tag heads, so it rejects
+        # a pinned historical commit SHA (even one that exists upstream).
         self.vit = torch.hub.load(hub_repo, arch, source=hub_source, pretrained=load_hub_weights,
-                                  trust_repo=True)
+                                  trust_repo=True,
+                                  **({"skip_validation": True} if hub_source == "github" else {}))
         if load_hub_weights and cached_weights is not None:
             try:
                 atomic_save(self.vit.state_dict(), cached_weights)
