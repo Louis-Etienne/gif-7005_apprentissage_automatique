@@ -146,12 +146,17 @@ def _extract_state_dict(obj):
     return state
 
 
+# facebookresearch/dinov2 main switched to PEP 604 annotations (`float | None`) in June 2025,
+# which breaks on Python < 3.10. Pin the last commit before that change (#528).
+DINOV2_HUB_REPO = "facebookresearch/dinov2:b48308a394a04ccb9c4dd3a1f0a4daa1ce0579b8"
+
+
 class DINOv2Backbone(nn.Module):
     """DINOv2 ViT/14 encoder + simple feature pyramid -> (C5, C3, C4, C5)."""
 
     strides = (8, 16, 32)
 
-    def __init__(self, arch="dinov2_vitb14", hub_repo="facebookresearch/dinov2", hub_source="github",
+    def __init__(self, arch="dinov2_vitb14", hub_repo=DINOV2_HUB_REPO, hub_source="github",
                  weights_path=None, pretrained=True, layers=None, out_channels=(256, 512, 1024),
                  vit_input_size=0, freeze_backbone="n", grad_checkpointing=False, amp=False,
                  cache_dir=None):
@@ -278,7 +283,7 @@ def build_dinov2_retinanet(args, RetinaNet):
     layers = [int(v) for v in args.dinov2_layers.split(",")] if args.dinov2_layers else None
     backbone = DINOv2Backbone(
         arch=args.arch,
-        hub_repo=args.dinov2_hub_dir or "facebookresearch/dinov2",
+        hub_repo=args.dinov2_hub_dir or DINOV2_HUB_REPO,
         hub_source="local" if args.dinov2_hub_dir else "github",
         weights_path=args.dinov2_weights,
         pretrained=args.dinov2_pretrained == "y",

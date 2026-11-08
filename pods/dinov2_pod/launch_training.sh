@@ -23,6 +23,6 @@ python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov2_pod/train_de
   --focal-gamma 2.0 \
   --score-threshold 0.2 \
   --resume auto \
-  --checkpoints /workspace/outputs/checkpoints \
-  --output_path /workspace/outputs/logs \
-  --tensorboard-path /workspace/outputs/tensorboard
+  --checkpoints /workspace/outputs/dinov2_mass/checkpoints \
+  --output_path /workspace/outputs/dinov2_mass/logs \
+  --tensorboard-path /workspace/outputs/dinov2_mass/tensorboard
