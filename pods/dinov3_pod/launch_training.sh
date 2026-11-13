@@ -11,7 +11,7 @@ DINOV3_WEIGHTS="${DINOV3_WEIGHTS:-}"
 WEIGHTS_ARGS=()
 if [[ -n "$DINOV3_WEIGHTS" ]]; then WEIGHTS_ARGS=(--dinov3-weights "$DINOV3_WEIGHTS"); fi
 
-## BASE MODEL
+## BASE MODEL - MASS
 python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_detector.py \
   --mammo-fm-codebase /workspace/Mammo-FM/src/codebase \
   --data-dir /workspace/data/vindr_png \
@@ -37,7 +37,59 @@ python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_de
   --output_path /workspace/outputs/dinov3_base_mass/logs \
   --tensorboard-path /workspace/outputs/dinov3_base_mass/tensorboard
 
-## SMALL MODEL
+## BASE MODEL - SUSPICIOUS CALCIFICATION
+python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_detector.py \
+  --mammo-fm-codebase /workspace/Mammo-FM/src/codebase \
+  --data-dir /workspace/data/vindr_png \
+  --img-dir /workspace/data/vindr_png/images_png \
+  --csv-file /workspace/data/vindr_png/vindr_detection_v1_folds.csv \
+  --dataset ViNDr \
+  --arch dinov3_vitb16 \
+  --dinov3-cache-dir /workspace/checkpoints \
+  ${WEIGHTS_ARGS[@]+"${WEIGHTS_ARGS[@]}"} \
+  --epochs 120 \
+  --batch-size 7 \
+  --freeze_backbone n \
+  --data_frac 1.0 \
+  --concepts "Suspicious Calcification" \
+  --print-freq 5000 \
+  --log-freq 300 \
+  --running-interactive n \
+  --focal-alpha 0.25 \
+  --focal-gamma 2.0 \
+  --score-threshold 0.2 \
+  --resume auto \
+  --checkpoints /workspace/outputs/dinov3_base_suspicious_calcification/checkpoints \
+  --output_path /workspace/outputs/dinov3_base_suspicious_calcification/logs \
+  --tensorboard-path /workspace/outputs/dinov3_base_suspicious_calcification/tensorboard
+
+## BASE MODEL - Focal Asymmetry
+python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_detector.py \
+  --mammo-fm-codebase /workspace/Mammo-FM/src/codebase \
+  --data-dir /workspace/data/vindr_png \
+  --img-dir /workspace/data/vindr_png/images_png \
+  --csv-file /workspace/data/vindr_png/vindr_detection_v1_folds.csv \
+  --dataset ViNDr \
+  --arch dinov3_vitb16 \
+  --dinov3-cache-dir /workspace/checkpoints \
+  ${WEIGHTS_ARGS[@]+"${WEIGHTS_ARGS[@]}"} \
+  --epochs 120 \
+  --batch-size 7 \
+  --freeze_backbone n \
+  --data_frac 1.0 \
+  --concepts "Focal Asymmetry" \
+  --print-freq 5000 \
+  --log-freq 300 \
+  --running-interactive n \
+  --focal-alpha 0.25 \
+  --focal-gamma 2.0 \
+  --score-threshold 0.2 \
+  --resume auto \
+  --checkpoints /workspace/outputs/dinov3_base_focal_asymmetry/checkpoints \
+  --output_path /workspace/outputs/dinov3_base_focal_asymmetry/logs \
+  --tensorboard-path /workspace/outputs/dinov3_base_focal_asymmetry/tensorboard
+
+## SMALL MODEL - MASS
 python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_detector.py \
   --mammo-fm-codebase /workspace/Mammo-FM/src/codebase \
   --data-dir /workspace/data/vindr_png \

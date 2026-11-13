@@ -23,6 +23,25 @@ python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/evaluate
   --visualization-dir /workspace/eval/dinov3_base_mass \
   --num-examples 30
 
+## BASE MODEL
+python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/evaluate_detector.py \
+  --mammo-fm-codebase /workspace/Mammo-FM/src/codebase \
+  --dataset ViNDr \
+  --data-dir /workspace/data/vindr_png \
+  --img-dir /workspace/data/vindr_png/images_png \
+  --csv-file vindr_detection_v1_folds.csv \
+  --arch dinov3_vitb16 \
+  --dinov3-cache-dir /workspace/checkpoints \
+  --concepts "Suspicious Calcification" \
+  --chk-pt-path "/workspace/outputs/dinov3_base_mass/checkpoints/ViNDr/Concept-Detector/dinov3_vitb16/lr_5e-05_epochs_120_concepts_Mass_alpha_0.25_gamma_2.0_score_th_0.2_data_frac_1.0_freeze_backbone_n/dinov3_vitb16_seed_10_fold_0_best_auroc.pth" \
+  --batch-size 7 \
+  --num-workers 4 \
+  --iou-threshold 0.5 \
+  --score-threshold 0.2 \
+  --max-detections 100 \
+  --visualization-dir /workspace/eval/dinov3_base_suspicious_calcification \
+  --num-examples 30
+
 ## SMALL MODEL
 python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/evaluate_detector.py \
   --mammo-fm-codebase /workspace/Mammo-FM/src/codebase \
