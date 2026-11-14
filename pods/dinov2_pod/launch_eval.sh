@@ -32,7 +32,7 @@ python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov2_pod/evaluate
   --arch dinov2_vitb14 \
   --dinov2-cache-dir /workspace/checkpoints \
   --concepts "Suspicious Calcification" \
-  --chk-pt-path "/workspace/outputs/dinov2_base_mass/checkpoints/ViNDr/Concept-Detector/dinov2_vitb14/lr_5e-05_epochs_120_concepts_Mass_alpha_0.25_gamma_2.0_score_th_0.2_data_frac_1.0_freeze_backbone_n/dinov2_vitb14_seed_10_fold_0_best_auroc.pth" \
+  --chk-pt-path "/workspace/outputs/dinov2_base_suspicious_calcification/checkpoints/ViNDr/Concept-Detector/dinov2_vitb14/lr_5e-05_epochs_120_concepts_Suspicious Calcification_alpha_0.25_gamma_2.0_score_th_0.2_data_frac_1.0_freeze_backbone_n/dinov2_vitb14_seed_10_fold_0_best_auroc.pth" \
   --batch-size 7 \
   --num-workers 4 \
   --iou-threshold 0.5 \
