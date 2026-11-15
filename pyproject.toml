@@ -9,12 +9,31 @@ version = "0.1.0"
 description = "Comparaison de modèles de fondation pour la classification de mammographies"
 requires-python = ">=3.10,<3.20"
 
+
 dependencies = [
     "numpy",
     "pandas",
     "matplotlib",
     "scikit-learn",
+
+    # Deep learning
+    "torch>=2.5,<3",
+    "torchvision",
+
+    # Foundation models
+    "transformers>=4.45,<5",
+
+    # Medical imaging
+    "pydicom>=3.0,<4",
+    "pylibjpeg",
+    "pylibjpeg-libjpeg",
+    "pylibjpeg-openjpeg",
+    "Pillow",
+
+    # Dataset access
+    "kaggle",
 ]
+
 
 [project.optional-dependencies]
 notebooks = [
