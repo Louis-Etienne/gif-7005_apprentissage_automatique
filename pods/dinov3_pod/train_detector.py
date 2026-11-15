@@ -592,11 +592,11 @@ def train_loop(args, device, mfm):
 # ----------------------------------------------------------------------------
 def config():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--tensorboard-path', metavar='DIR', default='/workspace/outputs/tensorboard',
+    parser.add_argument('--tensorboard-path', metavar='DIR', default='/workspace/outputs_finetune/tensorboard',
                         help='path to tensorboard logs')
-    parser.add_argument('--checkpoints', metavar='DIR', default='/workspace/outputs/checkpoints',
+    parser.add_argument('--checkpoints', metavar='DIR', default='/workspace/outputs_finetune/checkpoints',
                         help='path to checkpoints')
-    parser.add_argument('--output_path', metavar='DIR', default='/workspace/outputs/logs',
+    parser.add_argument('--output_path', metavar='DIR', default='/workspace/outputs_finetune/logs',
                         help='path to output logs')
     parser.add_argument("--data-dir", default="/workspace/data/vindr_png", type=str, help="Path to data file")
     parser.add_argument("--img-dir", default="images_png", type=str, help="Path to image file")

@@ -235,7 +235,7 @@ def config():
     parser.add_argument("--max-detections", default=100, type=int)
 
     # Visualization
-    parser.add_argument("--visualization-dir", default="/workspace/eval/dinov3", type=str)
+    parser.add_argument("--visualization-dir", default="/workspace/eval/metrics_finetune/dinov3", type=str)
     parser.add_argument("--num-examples", default=30, type=int)
 
     args = parser.parse_args()

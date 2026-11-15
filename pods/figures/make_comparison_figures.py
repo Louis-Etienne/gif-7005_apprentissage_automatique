@@ -22,6 +22,7 @@ MODELS = [
 TASKS = {
     "mass": "Mass",
     "suspicious_calcification": "Suspicious Calcification",
+    "focal_asymmetry": "Focal Asymmetry"
 }
 
 

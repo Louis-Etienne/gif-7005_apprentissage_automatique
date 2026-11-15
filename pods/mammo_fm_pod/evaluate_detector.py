@@ -236,6 +236,9 @@ def evaluate_checkpoint(args):
 
     print(f"Device: {device}")
 
+    output_dir = Path(args.visualization_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     # 1. Dataset
     valid_dataset = get_validation_dataset(args)
 
@@ -274,7 +277,7 @@ def evaluate_checkpoint(args):
         }
     }
 
-    metrics_path = Path(args.visualization_dir) / "metrics.json"
+    metrics_path = output_dir / "metrics.json"
 
     with open(metrics_path, "w") as f:
         json.dump(metrics, f, indent=4)
@@ -400,7 +403,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--visualization-dir",
         type=str,
-        default="/workspace/outputs/evaluation_examples"
+        default="/workspace/outputs_finetune/evaluation_examples"
     )
 
     parser.add_argument(

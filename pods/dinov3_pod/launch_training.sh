@@ -33,9 +33,9 @@ python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_de
   --focal-gamma 2.0 \
   --score-threshold 0.2 \
   --resume auto \
-  --checkpoints /workspace/outputs/dinov3_base_mass/checkpoints \
-  --output_path /workspace/outputs/dinov3_base_mass/logs \
-  --tensorboard-path /workspace/outputs/dinov3_base_mass/tensorboard
+  --checkpoints /workspace/outputs_finetune/dinov3_base_mass/checkpoints \
+  --output_path /workspace/outputs_finetune/dinov3_base_mass/logs \
+  --tensorboard-path /workspace/outputs_finetune/dinov3_base_mass/tensorboard
 
 ## BASE MODEL - SUSPICIOUS CALCIFICATION
 python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_detector.py \
@@ -59,9 +59,9 @@ python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_de
   --focal-gamma 2.0 \
   --score-threshold 0.2 \
   --resume auto \
-  --checkpoints /workspace/outputs/dinov3_base_suspicious_calcification/checkpoints \
-  --output_path /workspace/outputs/dinov3_base_suspicious_calcification/logs \
-  --tensorboard-path /workspace/outputs/dinov3_base_suspicious_calcification/tensorboard
+  --checkpoints /workspace/outputs_finetune/dinov3_base_suspicious_calcification/checkpoints \
+  --output_path /workspace/outputs_finetune/dinov3_base_suspicious_calcification/logs \
+  --tensorboard-path /workspace/outputs_finetune/dinov3_base_suspicious_calcification/tensorboard
 
 ## BASE MODEL - Focal Asymmetry
 python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_detector.py \
@@ -85,9 +85,9 @@ python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_de
   --focal-gamma 2.0 \
   --score-threshold 0.2 \
   --resume auto \
-  --checkpoints /workspace/outputs/dinov3_base_focal_asymmetry/checkpoints \
-  --output_path /workspace/outputs/dinov3_base_focal_asymmetry/logs \
-  --tensorboard-path /workspace/outputs/dinov3_base_focal_asymmetry/tensorboard
+  --checkpoints /workspace/outputs_finetune/dinov3_base_focal_asymmetry/checkpoints \
+  --output_path /workspace/outputs_finetune/dinov3_base_focal_asymmetry/logs \
+  --tensorboard-path /workspace/outputs_finetune/dinov3_base_focal_asymmetry/tensorboard
 
 ## SMALL MODEL - MASS
 python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_detector.py \
@@ -111,9 +111,9 @@ python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_de
   --focal-gamma 2.0 \
   --score-threshold 0.2 \
   --resume auto \
-  --checkpoints /workspace/outputs/dinov3_small_mass/checkpoints \
-  --output_path /workspace/outputs/dinov3_small_mass/logs \
-  --tensorboard-path /workspace/outputs/dinov3_small_mass/tensorboard
+  --checkpoints /workspace/outputs_finetune/dinov3_small_mass/checkpoints \
+  --output_path /workspace/outputs_finetune/dinov3_small_mass/logs \
+  --tensorboard-path /workspace/outputs_finetune/dinov3_small_mass/tensorboard
 
 ## SMALL - suspicious_calcification
 python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_detector.py \
@@ -137,6 +137,6 @@ python -u /workspace/gif-7005_apprentissage_automatique/pods/dinov3_pod/train_de
   --focal-gamma 2.0 \
   --score-threshold 0.2 \
   --resume auto \
-  --checkpoints /workspace/outputs/dinov3_small_suspicious_calcification/checkpoints \
-  --output_path /workspace/outputs/dinov3_small_suspicious_calcification/logs \
-  --tensorboard-path /workspace/outputs/dinov3_small_suspicious_calcification/tensorboard
+  --checkpoints /workspace/outputs_finetune/dinov3_small_suspicious_calcification/checkpoints \
+  --output_path /workspace/outputs_finetune/dinov3_small_suspicious_calcification/logs \
+  --tensorboard-path /workspace/outputs_finetune/dinov3_small_suspicious_calcification/tensorboard

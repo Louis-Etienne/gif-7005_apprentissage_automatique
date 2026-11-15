@@ -11,7 +11,9 @@ End feature maps:
   Mammo-FM / Mammo-CLIP  EfficientNet-B5 C5 (stride 32, 2048 ch), pretrained CLIP image encoder
   DINOv2                 last ViT block (patch 14), pretrained hub weights
   DINOv3                 last ViT block (patch 16), pretrained weights
---detector-ckpt KEY=PATH swaps in the fine-tuned backbone of a detector checkpoint.
+--detector-ckpt KEY=PATH swaps in the fine-tuned backbone of a detector checkpoint; KEY@CONCEPT=PATH
+only for the rows of that concept (one fine-tuned backbone per concept in a single figure, the PCA
+being fitted per checkpoint; rows of a concept without a checkpoint are left black).
 
 Run in the DINOv3 env (Python >= 3.10, pods/dinov3_pod/setup_env.sh) with the Mammo-FM codebase.
 """
@@ -28,7 +30,7 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn.functional as F
-from PIL import Image
+from PIL import Image, ImageDraw
 
 FIGURES_DIR = Path(__file__).resolve().parent
 PODS_DIR = FIGURES_DIR.parent
@@ -110,16 +112,41 @@ def extract_features(net, family, x):
 # ----------------------------------------------------------------------------
 # Images
 # ----------------------------------------------------------------------------
+def gt_boxes(findings, image_id, concepts):
+    """Ground-truth boxes (x1, y1, x2, y2, concept) of an image for the requested concepts.
+
+    The resized_* columns are in the pixel space of the stored PNGs (the raw x/y columns are not).
+    """
+    boxes = []
+    for r in findings[findings["image_id"] == image_id].itertuples():
+        concept = next((c for c in concepts if c in str(r.finding_categories)), None)
+        if concept is not None and r.resized_xmax > r.resized_xmin:
+            boxes.append((r.resized_xmin, r.resized_ymin, r.resized_xmax, r.resized_ymax, concept))
+    return boxes
+
+
 def select_images(args):
+    """(path, row label, GT boxes): --num-images test images per concept, no image used twice."""
     if args.images:
-        return [Path(p) for p in args.images]
-    df = pd.read_csv(Path(args.data_dir) / args.csv_file).head(2254)  # same subset as the detection runs
-    df = df[df["split"] == "test"]
-    if args.concept:
-        df = df[df["finding_categories"].str.contains(args.concept, regex=False)]
-    df = df.drop_duplicates(["study_id", "image_id"]).head(args.num_images)
-    return [Path(args.img_dir) / str(r.study_id) / (r.image_id if str(r.image_id).endswith(".png") else f"{r.image_id}.png")
-            for r in df.itertuples()]
+        return [(Path(p), "", []) for p in args.images]
+    df = pd.read_csv(Path(args.data_dir) / args.csv_file, low_memory=False).head(2254)  # same subset as the detection runs
+    findings = df[df["split"] == "test"]
+    images = findings.drop_duplicates(["patient_id", "image_id"])
+    box_concepts = [c for c in args.concepts if c]
+    selected, used = [], set()
+    for concept in args.concepts or [""]:
+        rows = images[images["finding_categories"].str.contains(concept, regex=False)] if concept else images
+        rows = rows[~rows["image_id"].isin(used)].head(args.num_images)
+        if len(rows) < args.num_images:
+            print(f"[warn] only {len(rows)} test images found for concept '{concept}'")
+        used.update(rows["image_id"])
+        selected += [(Path(args.img_dir) / str(r.patient_id) /
+                      (r.image_id if str(r.image_id).endswith(".png") else f"{r.image_id}.png"), concept,
+                      gt_boxes(findings, r.image_id, box_concepts))
+                     for r in rows.itertuples()]
+    if not selected:
+        raise ValueError(f"No test images found for concepts {args.concepts}")
+    return selected
 
 
 def load_image(path):
@@ -175,11 +202,26 @@ def resize_rgb(rgb, size, mode):
 # ----------------------------------------------------------------------------
 # Figure
 # ----------------------------------------------------------------------------
-def make_figure(images, columns, output, dpi):
+def concept_colors(concepts):
+    return {c: tuple(int(255 * v) for v in plt.cm.tab10(i)[:3]) for i, c in enumerate(concepts)}
+
+
+def draw_boxes(image, boxes, colors, width=4):
+    """(1, 1, H, W) image in [0, 1] -> (H, W, 3) uint8 with the GT boxes outlined."""
+    rgb = Image.fromarray((image[0, 0].numpy() * 255).astype(np.uint8)).convert("RGB")
+    draw = ImageDraw.Draw(rgb)
+    for x1, y1, x2, y2, concept in boxes:
+        draw.rectangle([x1, y1, x2, y2], outline=colors[concept], width=width)
+    return np.asarray(rgb)
+
+
+def make_figure(images, row_labels, columns, output, dpi):
     n_rows, n_cols = len(images), len(columns) + 1
     aspect = images[0].shape[-2] / images[0].shape[-1]
     fig, axes = plt.subplots(n_rows, n_cols, figsize=(1.6 * n_cols, 1.6 * aspect * n_rows + 0.3), squeeze=False)
     for row, image in enumerate(images):
+        if row_labels[row]:
+            axes[row, 0].set_ylabel(row_labels[row], fontsize=9, fontweight="bold")
         panels = [("Input", image[0, 0].numpy())] + [(name, rgbs[row]) for name, rgbs in columns]
         for col, (name, panel) in enumerate(panels):
             ax = axes[row, col]
@@ -203,65 +245,91 @@ def main():
     args = parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     grid = tuple(args.grid)
-    detector_ckpts = dict(item.split("=", 1) for item in args.detector_ckpt)
+    detector_ckpts = {}
+    for item in args.detector_ckpt:
+        target, path = item.split("=", 1)
+        key, _, concept = target.partition("@")
+        detector_ckpts.setdefault(key, {})[concept or None] = path
     unknown = set(detector_ckpts) - {m.key for m in MODELS}
     if unknown:
         raise ValueError(f"Unknown --detector-ckpt keys: {sorted(unknown)}")
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
-    image_paths = select_images(args)
+    image_paths, row_labels, boxes = zip(*select_images(args))
     images = [load_image(p) for p in image_paths]
     masks = [tissue_mask(image, grid, args.tissue_threshold) for image in images]
     print(f"{len(images)} images, token grid {grid[0]}x{grid[1]}, device {device}")
 
-    columns = []
+    colors = concept_colors([c for c in args.concepts if c])
+    gt_images = [draw_boxes(image, b, colors) for image, b in zip(images, boxes)]
+    gt_dir = args.output_dir / "input_gt"
+    gt_dir.mkdir(parents=True, exist_ok=True)
+    for path, gt_image in zip(image_paths, gt_images):
+        Image.fromarray(gt_image).save(gt_dir / f"{path.parent.name}_{path.stem}.png")
+    columns = [("Input + GT", gt_images)]
     for backbone in MODELS:
         if backbone.key not in args.models:
             continue
-        backbone = dataclasses.replace(backbone, detector_ckpt=detector_ckpts.get(backbone.key))
+        ckpts = detector_ckpts.get(backbone.key, {})
+        per_concept = any(concept is not None for concept in ckpts)
+        # Rows sharing a checkpoint go through the same network and PCA; None = pretrained weights.
+        groups = {}
+        for row, concept in enumerate(row_labels):
+            ckpt = ckpts.get(concept, ckpts.get(None))
+            if ckpt is None and per_concept:
+                print(f"[skip] {backbone.name}: no fine-tuned checkpoint for '{concept}', row left black")
+                continue
+            groups.setdefault(ckpt, []).append(row)
+
         stride = STRIDES[backbone.family]
         size = (grid[0] * stride, grid[1] * stride)
-        # Pretrained DINO expects ImageNet statistics; the Mammo backbones and every fine-tuned
-        # backbone were trained with Mammo-FM's.
-        normalization = "imagenet" if backbone.family != "effnet" and not backbone.detector_ckpt else "mammo"
-        print(f"\n{backbone.name}: input {size[0]}x{size[1]}, {normalization} normalization")
+        rgbs = [np.zeros((*image.shape[-2:], 3), dtype=np.uint8) for image in images]
+        for ckpt, rows in groups.items():
+            group_backbone = dataclasses.replace(backbone, detector_ckpt=ckpt)
+            # Pretrained DINO expects ImageNet statistics; the Mammo backbones and every fine-tuned
+            # backbone were trained with Mammo-FM's.
+            normalization = "imagenet" if backbone.family != "effnet" and not ckpt else "mammo"
+            print(f"\n{backbone.name}: input {size[0]}x{size[1]}, {normalization} normalization, {len(rows)} images")
 
-        net = build_backbone(backbone, args).to(device)
-        features = [extract_features(net, backbone.family, preprocess(image, size, normalization).to(device))
-                    for image in images]
-        del net
-        torch.cuda.empty_cache()
-        if tuple(features[0].shape[:2]) != grid:
-            raise RuntimeError(f"{backbone.name}: expected a {grid} grid, got {tuple(features[0].shape[:2])}")
+            net = build_backbone(group_backbone, args).to(device)
+            features = [extract_features(net, backbone.family, preprocess(images[r], size, normalization).to(device))
+                        for r in rows]
+            del net
+            torch.cuda.empty_cache()
+            if tuple(features[0].shape[:2]) != grid:
+                raise RuntimeError(f"{backbone.name}: expected a {grid} grid, got {tuple(features[0].shape[:2])}")
 
-        pca = fit_pca(features, masks)
-        rgbs = [resize_rgb(pca_rgb(f, m, pca), tuple(image.shape[-2:]), args.upsample)
-                for f, m, image in zip(features, masks, images)]
+            pca = fit_pca(features, [masks[r] for r in rows])
+            for r, f in zip(rows, features):
+                rgbs[r] = resize_rgb(pca_rgb(f, masks[r], pca), tuple(images[r].shape[-2:]), args.upsample)
 
-        suffix = "_finetuned" if backbone.detector_ckpt else ""
-        model_dir = args.output_dir / f"{backbone.key}{suffix}"
+        finetuned = any(ckpt is not None for ckpt in groups)
+        model_dir = args.output_dir / (f"{backbone.key}_finetuned" if finetuned else backbone.key)
         model_dir.mkdir(parents=True, exist_ok=True)
         for path, rgb in zip(image_paths, rgbs):
             Image.fromarray(rgb).save(model_dir / f"{path.parent.name}_{path.stem}.png")
-        columns.append((backbone.name + (" (fine-tuned)" if suffix else ""), rgbs))
+        columns.append((f"{backbone.name}\n(FT)" if finetuned else backbone.name, rgbs))
 
-    make_figure(images, columns, args.output_dir / "pca_rgb_comparison.png", args.dpi)
+    make_figure(images, row_labels, columns, args.output_dir / "pca_rgb_comparison.png", args.dpi)
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--mammo-fm-codebase", default=os.environ.get("MAMMO_FM_CODEBASE", DEFAULT_MAMMO_FM_CODEBASE))
     parser.add_argument("--models", nargs="+", choices=[m.key for m in MODELS], default=[m.key for m in MODELS])
-    parser.add_argument("--detector-ckpt", nargs="*", default=[], metavar="KEY=PATH",
-                        help="Use the fine-tuned backbone of a detector checkpoint, e.g. dinov3_base=/workspace/outputs/...pth")
+    parser.add_argument("--detector-ckpt", nargs="*", default=[], metavar="KEY[@CONCEPT]=PATH",
+                        help="Use the fine-tuned backbone of a detector checkpoint, e.g. dinov3_base=/workspace/outputs_finetune/...pth, "
+                             "or only for one concept's rows, e.g. \"dinov3_base@Suspicious Calcification=...pth\"")
 
-    # Images: explicit PNGs, or the first --num-images test images showing --concept
+    # Images: explicit PNGs, or the first --num-images test images showing each of --concepts
     parser.add_argument("--images", nargs="*", default=[])
     parser.add_argument("--data-dir", default="/workspace/data/vindr_png")
     parser.add_argument("--img-dir", default="/workspace/data/vindr_png/images_png")
     parser.add_argument("--csv-file", default="vindr_detection_v1_folds.csv")
-    parser.add_argument("--concept", default="Mass", help="'' = any test image")
-    parser.add_argument("--num-images", type=int, default=4)
+    parser.add_argument("--concepts", "--concept", nargs="*", default=["Mass"],
+                        help="One or more ViNDr finding categories, e.g. Mass \"Suspicious Calcification\"; "
+                             "none = any test image")
+    parser.add_argument("--num-images", type=int, default=4, help="Images per concept")
 
     # PCA / rendering
     parser.add_argument("--grid", nargs=2, type=int, default=[48, 28], metavar=("H", "W"),

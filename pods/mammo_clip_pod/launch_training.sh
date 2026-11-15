@@ -16,9 +16,9 @@ python /workspace/Mammo-FM/src/codebase/train_detector.py \
   --focal-alpha 0.25 \
   --focal-gamma 2.0 \
   --score-threshold 0.2 \
-  --checkpoints /workspace/outputs/mammo_clip_mass/checkpoints \
-  --output_path /workspace/outputs/mammo_clip_mass/logs \
-  --tensorboard-path /workspace/outputs/mammo_clip_mass/tensorboard
+  --checkpoints /workspace/outputs_finetune/mammo_clip_mass/checkpoints \
+  --output_path /workspace/outputs_finetune/mammo_clip_mass/logs \
+  --tensorboard-path /workspace/outputs_finetune/mammo_clip_mass/tensorboard
 
 
   ## Suspicious Calcification
@@ -40,6 +40,6 @@ python /workspace/Mammo-FM/src/codebase/train_detector.py \
   --focal-alpha 0.25 \
   --focal-gamma 2.0 \
   --score-threshold 0.2 \
-  --checkpoints /workspace/outputs/mammo_clip_suspicious_calcification/checkpoints \
-  --output_path /workspace/outputs/mammo_clip_suspicious_calcification/logs \
-  --tensorboard-path /workspace/outputs/mammo_clip_suspicious_calcification/tensorboard
+  --checkpoints /workspace/outputs_finetune/mammo_clip_suspicious_calcification/checkpoints \
+  --output_path /workspace/outputs_finetune/mammo_clip_suspicious_calcification/logs \
+  --tensorboard-path /workspace/outputs_finetune/mammo_clip_suspicious_calcification/tensorboard
