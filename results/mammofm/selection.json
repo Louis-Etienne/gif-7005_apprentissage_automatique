@@ -1,0 +1,39 @@
+{
+  "model": "Mammo-FM",
+  "method": "frozen embeddings + standardized logistic regression",
+  "selection_metric": "validation AUPRC",
+  "threshold_selection": "validation F2 maximum",
+  "best_config": {
+    "C": 0.01,
+    "class_weight": "None",
+    "val_auprc": 0.28614284686132374,
+    "val_auroc": 0.8259377255816537,
+    "iterations": 74
+  },
+  "threshold": 0.09517540037631989,
+  "validation": {
+    "threshold": 0.09517540037631989,
+    "n": 8184,
+    "positives": 180,
+    "auroc": 0.8259377255816537,
+    "auprc": 0.28614284686132374,
+    "accuracy": 0.958088954056696,
+    "precision": 0.2255892255892256,
+    "sensitivity_recall": 0.37222222222222223,
+    "specificity": 0.9712643678160919,
+    "f1": 0.2809224318658281,
+    "f2": 0.32940019665683384,
+    "confusion_matrix": [
+      [
+        7774,
+        230
+      ],
+      [
+        113,
+        67
+      ]
+    ]
+  },
+  "train_images": 38341,
+  "validation_images": 8184
+}

@@ -1,0 +1,29 @@
+2026-11-21 02:45:15,685 | INFO | train : 10000/38341 embeddings lus
+2026-11-21 02:46:08,475 | INFO | train : 20000/38341 embeddings lus
+2026-11-21 02:47:04,253 | INFO | train : 30000/38341 embeddings lus
+2026-11-21 02:47:53,253 | INFO | train : 38341 images, 801 cancers (2.09%), 8339 patients
+2026-11-21 02:48:40,744 | INFO | validation : 8184 images, 180 cancers (2.20%), 1787 patients
+2026-11-21 02:48:40,761 | INFO | Entraînement : C=0.001, class_weight=balanced
+2026-11-21 02:48:46,312 | INFO | Validation : AUPRC=0.08776 AUROC=0.74057
+2026-11-21 02:48:46,316 | INFO | Entraînement : C=0.01, class_weight=balanced
+2026-11-21 02:48:53,383 | INFO | Validation : AUPRC=0.06860 AUROC=0.68890
+2026-11-21 02:48:53,384 | INFO | Entraînement : C=0.1, class_weight=balanced
+2026-11-21 02:49:03,459 | INFO | Validation : AUPRC=0.04589 AUROC=0.65653
+2026-11-21 02:49:03,460 | INFO | Entraînement : C=1.0, class_weight=balanced
+2026-11-21 02:49:17,240 | INFO | Validation : AUPRC=0.04064 AUROC=0.64055
+2026-11-21 02:49:17,241 | INFO | Entraînement : C=10.0, class_weight=balanced
+2026-11-21 02:49:35,370 | INFO | Validation : AUPRC=0.03905 AUROC=0.63768
+2026-11-21 02:49:35,370 | INFO | Entraînement : C=0.001, class_weight=None
+2026-11-21 02:49:37,424 | INFO | Validation : AUPRC=0.10379 AUROC=0.77225
+2026-11-21 02:49:37,424 | INFO | Entraînement : C=0.01, class_weight=None
+2026-11-21 02:49:39,883 | INFO | Validation : AUPRC=0.08774 AUROC=0.73106
+2026-11-21 02:49:39,884 | INFO | Entraînement : C=0.1, class_weight=None
+2026-11-21 02:49:43,575 | INFO | Validation : AUPRC=0.06303 AUROC=0.67394
+2026-11-21 02:49:43,576 | INFO | Entraînement : C=1.0, class_weight=None
+2026-11-21 02:49:49,404 | INFO | Validation : AUPRC=0.04379 AUROC=0.63711
+2026-11-21 02:49:49,418 | INFO | Entraînement : C=10.0, class_weight=None
+2026-11-21 02:49:56,693 | INFO | Validation : AUPRC=0.04010 AUROC=0.62566
+2026-11-21 02:49:57,058 | INFO | MEILLEUR MODÈLE : {'C': 0.001, 'class_weight': 'None', 'val_auprc': 0.10379333728614619, 'val_auroc': 0.7722534566050309, 'iterations': 32}
+2026-11-21 02:49:57,059 | INFO | SEUIL validation F2 : 0.032815
+2026-11-21 02:49:57,060 | INFO | MÉTRIQUES validation : {"threshold": 0.03281482309103012, "n": 8184, "positives": 180, "auroc": 0.7722534566050309, "auprc": 0.10379333728614619, "accuracy": 0.8357771260997068, "precision": 0.07079646017699115, "sensitivity_recall": 0.5333333333333333, "specificity": 0.8425787106446777, "f1": 0.125, "f2": 0.23121387283236994, "confusion_matrix": [[6744, 1260], [84, 96]]}
+2026-11-21 02:49:57,060 | INFO | Terminé. Résultats : /workspace/gif-7005_apprentissage_automatique/results/mammoclip

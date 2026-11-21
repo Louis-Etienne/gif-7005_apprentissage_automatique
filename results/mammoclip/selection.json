@@ -1,0 +1,39 @@
+{
+  "model": "Mammo-CLIP",
+  "method": "frozen embeddings + standardized logistic regression",
+  "selection_metric": "validation AUPRC",
+  "threshold_selection": "validation F2 maximum",
+  "best_config": {
+    "C": 0.001,
+    "class_weight": "None",
+    "val_auprc": 0.10379333728614619,
+    "val_auroc": 0.7722534566050309,
+    "iterations": 32
+  },
+  "threshold": 0.03281482309103012,
+  "validation": {
+    "threshold": 0.03281482309103012,
+    "n": 8184,
+    "positives": 180,
+    "auroc": 0.7722534566050309,
+    "auprc": 0.10379333728614619,
+    "accuracy": 0.8357771260997068,
+    "precision": 0.07079646017699115,
+    "sensitivity_recall": 0.5333333333333333,
+    "specificity": 0.8425787106446777,
+    "f1": 0.125,
+    "f2": 0.23121387283236994,
+    "confusion_matrix": [
+      [
+        6744,
+        1260
+      ],
+      [
+        84,
+        96
+      ]
+    ]
+  },
+  "train_images": 38341,
+  "validation_images": 8184
+}

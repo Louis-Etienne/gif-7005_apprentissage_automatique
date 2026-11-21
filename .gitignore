@@ -28,3 +28,10 @@ data/
 *.egg-info/
 build/
 dist/
+
+# Dépôts externes des modèles de fondation
+/external/Mammo-CLIP/
+/external/Mammo-FM/
+
+# Checkpoints des modèles préentraînés
+/models/
