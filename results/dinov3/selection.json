@@ -1,0 +1,39 @@
+{
+  "model": "facebook/dinov3-small",
+  "method": "frozen embeddings + standardized logistic regression",
+  "selection_metric": "validation AUPRC",
+  "threshold_selection": "validation F2 maximum",
+  "best_config": {
+    "C": 0.01,
+    "class_weight": "None",
+    "val_auprc": 0.050537399569578555,
+    "val_auroc": 0.6874472485979233,
+    "iterations": 31
+  },
+  "threshold": 0.03804945573210716,
+  "validation": {
+    "threshold": 0.03804945573210716,
+    "n": 8184,
+    "positives": 180,
+    "auroc": 0.6874472485979233,
+    "auprc": 0.050537399569578555,
+    "accuracy": 0.8804985337243402,
+    "precision": 0.06441048034934498,
+    "sensitivity_recall": 0.3277777777777778,
+    "specificity": 0.8929285357321339,
+    "f1": 0.10766423357664233,
+    "f2": 0.18031784841075796,
+    "confusion_matrix": [
+      [
+        7147,
+        857
+      ],
+      [
+        121,
+        59
+      ]
+    ]
+  },
+  "train_images": 38341,
+  "validation_images": 8184
+}

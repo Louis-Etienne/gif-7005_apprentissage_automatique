@@ -1,3 +1,35 @@
+#!/usr/bin/env python3
+"""Embeddings RSNA DINOv3 ViT-S/16, sans entraînement ni consultation des labels.
+
+Test: python -u scripts/extract_embeddings_dinov3.py --splits validation --max-images 2
+Complet: python -u scripts/extract_embeddings_dinov3.py --splits train validation test
+"""
+import argparse
+import csv
+import logging
+import os
+import time
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import pydicom
+import torch
+from PIL import Image
+from transformers import AutoImageProcessor, AutoModel
+
+ROOT = Path(__file__).resolve().parents[1]
+SPLITS = ROOT / 'data/processed/splits'
+DICOMS = ROOT / 'data/raw/train_images'
+MODEL = ROOT / 'models/dinov3'
+OUTPUT = ROOT / 'data/processed/embeddings/dinov3'
+EXPECTED = {'train': 38341, 'validation': 8184, 'test': 8181}
+LOG = logging.getLogger('dinov3')
+
+
+def arguments():
+    p = argparse.ArgumentParser()
+    p.add_argument('--splits', nargs='+', choices=list(EXPECTED), default=list(EXPECTED))
     p.add_argument('--max-images', type=int, default=None)
     p.add_argument('--progress-every', type=int, default=100)
     p.add_argument('--verify-existing', action='store_true')

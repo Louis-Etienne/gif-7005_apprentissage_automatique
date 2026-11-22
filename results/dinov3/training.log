@@ -1,0 +1,29 @@
+2026-11-21 13:24:04,067 | INFO | train : 10000/38341 embeddings lus
+2026-11-21 13:24:57,879 | INFO | train : 20000/38341 embeddings lus
+2026-11-21 13:25:49,834 | INFO | train : 30000/38341 embeddings lus
+2026-11-21 13:26:33,229 | INFO | train : 38341 images, 801 cancers (2.09%), 8339 patients
+2026-11-21 13:27:14,431 | INFO | validation : 8184 images, 180 cancers (2.20%), 1787 patients
+2026-11-21 13:27:14,438 | INFO | Entraînement : C=0.001, class_weight=balanced
+2026-11-21 13:27:14,703 | INFO | Validation : AUPRC=0.04822 AUROC=0.68168
+2026-11-21 13:27:14,714 | INFO | Entraînement : C=0.01, class_weight=balanced
+2026-11-21 13:27:15,168 | INFO | Validation : AUPRC=0.04575 AUROC=0.66786
+2026-11-21 13:27:15,170 | INFO | Entraînement : C=0.1, class_weight=balanced
+2026-11-21 13:27:15,898 | INFO | Validation : AUPRC=0.04386 AUROC=0.66262
+2026-11-21 13:27:15,914 | INFO | Entraînement : C=1.0, class_weight=balanced
+2026-11-21 13:27:16,678 | INFO | Validation : AUPRC=0.04339 AUROC=0.66194
+2026-11-21 13:27:16,679 | INFO | Entraînement : C=10.0, class_weight=balanced
+2026-11-21 13:27:17,410 | INFO | Validation : AUPRC=0.04339 AUROC=0.66213
+2026-11-21 13:27:17,414 | INFO | Entraînement : C=0.001, class_weight=None
+2026-11-21 13:27:17,547 | INFO | Validation : AUPRC=0.04836 AUROC=0.69399
+2026-11-21 13:27:17,548 | INFO | Entraînement : C=0.01, class_weight=None
+2026-11-21 13:27:17,728 | INFO | Validation : AUPRC=0.05054 AUROC=0.68745
+2026-11-21 13:27:17,729 | INFO | Entraînement : C=0.1, class_weight=None
+2026-11-21 13:27:17,996 | INFO | Validation : AUPRC=0.04840 AUROC=0.67340
+2026-11-21 13:27:17,997 | INFO | Entraînement : C=1.0, class_weight=None
+2026-11-21 13:27:18,292 | INFO | Validation : AUPRC=0.04641 AUROC=0.66763
+2026-11-21 13:27:18,293 | INFO | Entraînement : C=10.0, class_weight=None
+2026-11-21 13:27:18,609 | INFO | Validation : AUPRC=0.04695 AUROC=0.66661
+2026-11-21 13:27:18,885 | INFO | MEILLEUR MODÈLE : {'C': 0.01, 'class_weight': 'None', 'val_auprc': 0.050537399569578555, 'val_auroc': 0.6874472485979233, 'iterations': 31}
+2026-11-21 13:27:18,885 | INFO | SEUIL validation F2 : 0.038049
+2026-11-21 13:27:18,886 | INFO | MÉTRIQUES validation : {"threshold": 0.03804945573210716, "n": 8184, "positives": 180, "auroc": 0.6874472485979233, "auprc": 0.050537399569578555, "accuracy": 0.8804985337243402, "precision": 0.06441048034934498, "sensitivity_recall": 0.3277777777777778, "specificity": 0.8929285357321339, "f1": 0.10766423357664233, "f2": 0.18031784841075796, "confusion_matrix": [[7147, 857], [121, 59]]}
+2026-11-21 13:27:18,886 | INFO | Terminé. Résultats : /workspace/gif-7005_apprentissage_automatique/results/dinov3
